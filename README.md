@@ -28,4 +28,6 @@ Here is the prototype for tests:
 <img src="https://raw.githubusercontent.com/reivaxy/iotDimmer/master/resources/prototype.jpg" width="500"/>
 
 
+And a screenshot of the webApp showing also two other modules:
 
+<img src="https://raw.githubusercontent.com/reivaxy/iotDimmer/master/resources/webApp.png" width="500"/>
