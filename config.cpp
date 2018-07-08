@@ -17,7 +17,7 @@ DimmerConfigClass::DimmerConfigClass(unsigned int version, const char* name):Mod
  */
 void DimmerConfigClass::initFromDefault() {
   ModuleConfigClass::initFromDefault(); // handles version and name init, ssid and pwd
-
+  setDefaultLevel(DEFAULT_DEFAULT_LEVEL);
 }
 
 const char* DimmerConfigClass::getDefaultUIClassName() {
@@ -31,4 +31,12 @@ const char* DimmerConfigClass::getDefaultUIClassName() {
  */
 DimmerConfigStruct* DimmerConfigClass::_getDataPtr(void) {
   return (DimmerConfigStruct*)ModuleConfigClass::_getDataPtr();
+}
+
+int DimmerConfigClass::getDefaultLevel() {
+  return (int)DimmerConfigClass::_getDataPtr()->defaultLevel;
+}
+
+void DimmerConfigClass::setDefaultLevel(int level) {
+  DimmerConfigClass::_getDataPtr()->defaultLevel = level;
 }

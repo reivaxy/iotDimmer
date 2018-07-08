@@ -38,7 +38,7 @@ DimmerModule::DimmerModule(DimmerConfigClass* config, int displayAddr, int displ
   pinMode(ctrlPinParam, OUTPUT);
   ctrlPin = ctrlPinParam;
   _oledDisplay->setLineAlignment(2, TEXT_ALIGN_CENTER);
-  setLevel(0);
+  setLevel(config->getDefaultLevel());
 }
 
 
@@ -73,7 +73,7 @@ void DimmerModule::setLevel(int levelParam) {
 
 void DimmerModule::refreshDisplay() {
   char message[100];
-  sprintf(message, "Level %d", level);
+  sprintf(message, "Level  %d", level);
   _oledDisplay->setLine(2, message, NOT_TRANSIENT, NOT_BLINKING);
 }
 
