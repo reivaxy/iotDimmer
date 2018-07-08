@@ -6,6 +6,7 @@
  
 #include "DimmerModule.h"
 
+// Need to be global since I couldn't make the interrupt handler be a member method
 int level = 0;
 int ctrlPin;
 
@@ -15,8 +16,15 @@ void intHandler() {
   // Firing angle calculation : 1 full 50Hz wave =1/50=20ms 
   // Every zerocrossing : (50Hz)-> 10ms (1/2 Cycle) For 60Hz (1/2 Cycle) => 8.33ms 
   // 10ms=10000us
-  
-  int dimtime = (100*level);    // For 60Hz =>65
+  int lightLevel = 100 - level; 
+  if(lightLevel < 5) {  // TODO: Make this a configurable threshold ?
+    digitalWrite(ctrlPin, LOW);    // triac Off
+    return;  
+  } 
+  if(lightLevel > 99) {
+    lightLevel --;  // Otherwise may skip one pulse
+  }
+  int dimtime = (100*lightLevel);    // For 60Hz =>65
   delayMicroseconds(dimtime);    // Off cycle
   digitalWrite(ctrlPin, HIGH);   // triac firing
   delayMicroseconds(10);         // triac On propogation delay (for 60Hz use 8.33)
@@ -26,11 +34,9 @@ void intHandler() {
  
 DimmerModule::DimmerModule(DimmerConfigClass* config, int displayAddr, int displaySda, int displayScl, int intPin, int ctrlPinParam):XIOTModule(config, displayAddr, displaySda, displayScl) {
   pinMode(intPin, INPUT_PULLUP);
+  _intPin = intPin;
   pinMode(ctrlPinParam, OUTPUT);
   ctrlPin = ctrlPinParam;
-  
-  attachInterrupt(digitalPinToInterrupt(intPin), intHandler, RISING);
-
   _oledDisplay->setLineAlignment(2, TEXT_ALIGN_CENTER);
   setLevel(0);
 }
@@ -69,4 +75,9 @@ void DimmerModule::refreshDisplay() {
   char message[100];
   sprintf(message, "Level %d", level);
   _oledDisplay->setLine(2, message, NOT_TRANSIENT, NOT_BLINKING);
+}
+
+void DimmerModule::customRegistered() {
+  Serial.println("Init interrupt handler");  
+  attachInterrupt(digitalPinToInterrupt(_intPin), intHandler, RISING);
 }
