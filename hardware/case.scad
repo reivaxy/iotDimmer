@@ -2,7 +2,7 @@ include <../../iotinator/hardware/oledPanel.scad>;
 
 
 case();
-
+//wireBlockerBottom();
 
 wall = 1.5;
 
@@ -37,22 +37,22 @@ module case() {
     }
   }
 
-  translate([x - 9 - wall, y - 30 - wall - 8, wall]) {
+  translate([x - 11 - wall, y - 30 - wall - 8, wall]) {
     wireBlockerBottom();
   }
   // screws for triac board
   translate([wall + xOffset, wall + 4, wall]) {
     bottomSpacer(3);
   }
-  translate([wall + xOffset + 25, wall + 4, wall]) {
+  translate([wall + xOffset + 24, wall + 4, wall]) {
     bottomSpacer(3);
   }
   // Support for triac board
-  translate([wall + 4, 44, wall]) {
+  translate([wall + 4, 45, wall]) {
     cube([30, 2, bottomSpacerZ]);
   }
   // Support for esp board
-  translate([wall + 4 + 35, yi - 10, wall]) {
+  translate([wall + 4 + 35, yi - 15, wall]) {
     cube([30, 2, bottomSpacerZ]);
   }
 
@@ -60,16 +60,17 @@ module case() {
   translate([wall + xOffset + 31, wall + 4 + 12.6, wall]) {
     bottomSpacer(2);
   }
-  translate([wall + xOffset + 31 + 47, wall + 4 + 12.6, wall]) {
+  translate([wall + xOffset + 31 + 48.5, wall + 4 + 11, wall]) {
     bottomSpacer(2);
   }
 
+  // corners to support the cover
   translate([wall, wall, wall])
     corner(8, zi, 20);
   translate([xi + wall, wall, wall])
     rotate(90, [0, 0, 1])
       corner(8, zi, 20);
-  translate([xi, yi + wall, wall])
+  translate([xi + wall, yi + wall, wall])
     rotate(180, [0, 0, 1])
       corner(8, zi, 20);
   translate([wall, yi + wall, wall])
@@ -90,44 +91,43 @@ module bottomSpacer(screwDiam) {
 
 module wireBlockerBottom() {
   y = 30;
-  x = 9;
+  x = 11;
+  z = 6;
   difference() {
     union() {
       difference() {
-        cube([x, y, 6]);
+        cube([x, y, z]);
         // wire passage
-        translate([-0.1, 9, 7]) {
+        translate([-0.1, 9, z+1]) {
            rotate(90, [0, 1, 0]) {
-             cylinder(d=5, h=10, $fn=50);
+             cylinder(d=5, h=x+2, $fn=50);
            }
         }
-        translate([-0.1, y - 9, 7]) {
+        translate([-0.1, y - 9, z+1]) {
            rotate(90, [0, 1, 0]) {
-             cylinder(d=5, h=10, $fn=50);
+             cylinder(d=5, h=x+2, $fn=50);
            }
         }
       }
       // bottom edge to improve grip on wire
       color("lime") {
         side = 3;
-        translate([0, 0, 5.2]) {
+        translate([(x - sqrt(2 * side * side))/2, 0, z/2 + 0.1]) {
           rotate(45, [0, 1, 0]) {
-            translate([(x - side)/2, 0, 0]) {
-              cube([side, y, side]);
-            }
+            cube([side, y, side]);
           }
         }
       }
     }
     // Screw holes
     translate([x/2, 3, 0.1]) {
-      cylinder(d=2.5, h=6, $fn=50);
+      cylinder(d=2.5, h=z, $fn=50);
     }
     translate([x/2, y - 3, 0.1]) {
-      cylinder(d=2.5, h=6, $fn=50);
+      cylinder(d=2.5, h=z, $fn=50);
     }
      translate([x/2, y/2, 0.1]) {
-       cylinder(d=2.5, h=6, $fn=50);
+       cylinder(d=2.5, h=z, $fn=50);
     }
   }
 }
