@@ -22,6 +22,23 @@ module case() {
     translate([wall, wall, wall]) {
       cube([xi, yi, z]);
     }
+    // Wire holes. TODO: params ! Should actually be part of wireBlockerBottom
+    // But don't know how to make the difference for the holes...
+    // or use same trick as with oled panel
+    translate([xi, yi - 15.5, 8]) {
+      rotate(90, [0, 1, 0]) {
+        cylinder(d=4, h=5, $fn=50);
+      }
+    }
+    translate([xi, yi - 27.5, 8]) {
+      rotate(90, [0, 1, 0]) {
+        cylinder(d=4, h=5, $fn=50);
+      }
+    }
+  }
+
+  translate([x - 9 - wall, y - 30 - wall - 8, wall]) {
+    wireBlockerBottom();
   }
   // screws for triac board
   translate([wall + xOffset, wall + 4, wall]) {
@@ -34,6 +51,10 @@ module case() {
   translate([wall + 4, 44, wall]) {
     cube([30, 2, bottomSpacerZ]);
   }
+  // Support for esp board
+  translate([wall + 4 + 35, yi - 10, wall]) {
+    cube([30, 2, bottomSpacerZ]);
+  }
 
   // screws for esp board
   translate([wall + xOffset + 31, wall + 4 + 12.6, wall]) {
@@ -41,10 +62,6 @@ module case() {
   }
   translate([wall + xOffset + 31 + 47, wall + 4 + 12.6, wall]) {
     bottomSpacer(2);
-  }
-
-  translate([x - 9 - wall, y - 30 - wall - 8, wall]) {
-    wireBlockerBottom();
   }
 
   translate([wall, wall, wall])
