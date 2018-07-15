@@ -1,9 +1,8 @@
 include <../../iotinator/hardware/oledPanel.scad>;
 
 
-//case();
+case();
 
-wireHolder();
 
 wall = 1.5;
 
@@ -26,10 +25,10 @@ module case() {
   }
   // screws for triac board
   translate([wall + xOffset, wall + 4, wall]) {
-    screw(3);
+    bottomSpacer(3);
   }
   translate([wall + xOffset + 25, wall + 4, wall]) {
-    screw(3);
+    bottomSpacer(3);
   }
   // Support for triac board
   translate([wall + 4, 44, wall]) {
@@ -38,55 +37,105 @@ module case() {
 
   // screws for esp board
   translate([wall + xOffset + 31, wall + 4 + 12.6, wall]) {
-    screw(2);
+    bottomSpacer(2);
   }
   translate([wall + xOffset + 31 + 47, wall + 4 + 12.6, wall]) {
-    screw(2);
+    bottomSpacer(2);
   }
 
-}
-
-module wireHolder() {
-  length = 30;
-  difference() {
-    cube([9, length, 6]);
-    translate([4.5, 3, 0.1]) {
-      cylinder(d=2.5, h=6, $fn=50);
-    }
-
-    // Screws
-    translate([4.5, length - 3, 0.1]) {
-      cylinder(d=2.5, h=6, $fn=50);
-    }
-     translate([4.5, length/2, 0.1]) {
-       cylinder(d=2.5, h=6, $fn=50);
-    }
-
-    // wire passage
-    translate([-0.1, 9, 7]) {
-       rotate(90, [0, 1, 0]) {
-         cylinder(d=5, h=10, $fn=50);
-       }
-    }
-    translate([-0.1, length - 9, 7]) {
-       rotate(90, [0, 1, 0]) {
-         cylinder(d=5, h=10, $fn=50);
-       }
-    }
+  translate([x - 9 - wall, y - 30 - wall - 8, wall]) {
+    wireBlockerBottom();
   }
 
+  translate([wall, wall, wall])
+    corner(8, zi, 20);
+  translate([xi + wall, wall, wall])
+    rotate(90, [0, 0, 1])
+      corner(8, zi, 20);
+  translate([xi, yi + wall, wall])
+    rotate(180, [0, 0, 1])
+      corner(8, zi, 20);
+  translate([wall, yi + wall, wall])
+    rotate(-90, [0, 0, 1])
+      corner(8, zi, 20);
 }
 
-module screw(screwDiam) {
-  translate([0, 0, wall]) {
+module bottomSpacer(screwDiam) {
+  translate([0, 0, 0]) {
     difference() {
       cylinder(d = screwDiam+1.5, h = bottomSpacerZ, $fn=50);
       translate([0, 0, 1]) {
         cylinder(d = screwDiam, h = bottomSpacerZ, $fn=50);
       }
-
     }
-
   }
+}
 
+module wireBlockerBottom() {
+  y = 30;
+  x = 9;
+  difference() {
+    union() {
+      difference() {
+        cube([x, y, 6]);
+        // wire passage
+        translate([-0.1, 9, 7]) {
+           rotate(90, [0, 1, 0]) {
+             cylinder(d=5, h=10, $fn=50);
+           }
+        }
+        translate([-0.1, y - 9, 7]) {
+           rotate(90, [0, 1, 0]) {
+             cylinder(d=5, h=10, $fn=50);
+           }
+        }
+      }
+      // bottom edge to improve grip on wire
+      color("lime") {
+        side = 3;
+        translate([0, 0, 5.2]) {
+          rotate(45, [0, 1, 0]) {
+            translate([(x - side)/2, 0, 0]) {
+              cube([side, y, side]);
+            }
+          }
+        }
+      }
+    }
+    // Screw holes
+    translate([x/2, 3, 0.1]) {
+      cylinder(d=2.5, h=6, $fn=50);
+    }
+    translate([x/2, y - 3, 0.1]) {
+      cylinder(d=2.5, h=6, $fn=50);
+    }
+     translate([x/2, y/2, 0.1]) {
+       cylinder(d=2.5, h=6, $fn=50);
+    }
+  }
+}
+
+module corner(side, height, zOffset, holeDiam = 2) {
+  angle = 20;
+  difference() {
+    color("aqua") {
+     translate([0, 0, height - 5]) {
+       difference() {
+         cube([side, side, 5]);
+         translate([side/2, side/2, 0.1]) {
+           cylinder(d=holeDiam, h=6, $fn=50);
+         }
+       }
+     }
+     translate([0, 0, zOffset])
+      linear_extrude(height = height - zOffset - 5, center = false, convexity = 10, scale=side*200)
+         square(size = .01, center = true);
+    }
+    translate([-side, -side, 0])
+      cube([side, side, height]);
+    translate([-side, 0, 0])
+      cube([side, side, height]);
+    translate([0, -side, 0])
+      cube([side, side, height]);
+  }
 }
