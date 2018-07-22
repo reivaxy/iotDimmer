@@ -1,8 +1,9 @@
 include <../../iotinator/hardware/oledPanel.scad>;
 
 
-case();
+//case();
 //wireBlockerBottom();
+wireBlockerTop();
 
 wall = 1.5;
 
@@ -49,7 +50,7 @@ module case() {
   }
   // Support for triac board
   translate([wall + 4, 45, wall]) {
-    cube([30, 2, bottomSpacerZ]);
+    cube([25, 2, bottomSpacerZ]);
   }
   // Support for esp board
   translate([wall + 4 + 35, yi - 15, wall]) {
@@ -89,10 +90,9 @@ module bottomSpacer(screwDiam) {
   }
 }
 
-module wireBlockerBottom() {
+module wireBlockerBottom(z = 6, screwThrew = false) {
   y = 30;
   x = 11;
-  z = 6;
   difference() {
     union() {
       difference() {
@@ -111,7 +111,7 @@ module wireBlockerBottom() {
       }
       // bottom edge to improve grip on wire
       color("lime") {
-        side = 3;
+        side = z/2;
         translate([(x - sqrt(2 * side * side))/2, 0, z/2 + 0.1]) {
           rotate(45, [0, 1, 0]) {
             cube([side, y, side]);
@@ -120,17 +120,22 @@ module wireBlockerBottom() {
       }
     }
     // Screw holes
-    translate([x/2, 3, 0.1]) {
-      cylinder(d=2.5, h=z, $fn=50);
+    translate([x/2, 3, screwThrew?-0.1:0.1]) {
+      cylinder(d=2.5, h=6, $fn=50);
     }
-    translate([x/2, y - 3, 0.1]) {
-      cylinder(d=2.5, h=z, $fn=50);
+    translate([x/2, y - 3, screwThrew?-0.1:0.1]) {
+      cylinder(d=2.5, h=6, $fn=50);
     }
-     translate([x/2, y/2, 0.1]) {
-       cylinder(d=2.5, h=z, $fn=50);
+     translate([x/2, y/2, screwThrew?-0.1:0.1]) {
+       cylinder(d=2.5, h=6, $fn=50);
     }
   }
 }
+
+module wireBlockerTop() {
+  wireBlockerBottom(z = 3.5, screwThrew = true);
+}
+
 
 module corner(side, height, zOffset, holeDiam = 2) {
   angle = 20;
