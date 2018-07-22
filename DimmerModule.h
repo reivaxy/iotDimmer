@@ -13,8 +13,7 @@ void intHandler();
 class DimmerModule:public XIOTModule {
 public:
   DimmerModule(DimmerConfigClass* config, int displayAddr, int displaySda, int displayScl, int intPin, int ctrlPin);
-  void customRegistered() override;
-  
+
 protected:    
   char* _customData() override;
   char* useData(char *, int *) override;

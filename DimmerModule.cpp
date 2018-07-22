@@ -3,7 +3,7 @@
  *  Xavier Grosjean 2018
  *  Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International Public License
  */
- 
+
 #include "DimmerModule.h"
 
 // Need to be global since I couldn't make the interrupt handler be a member method
@@ -13,14 +13,14 @@ int ctrlPin;
 // Handler for the interruption received when crossing 0
 // Code found on Amazon description of triac + zero crossing detection module
 void intHandler() {
-  // Firing angle calculation : 1 full 50Hz wave =1/50=20ms 
-  // Every zerocrossing : (50Hz)-> 10ms (1/2 Cycle) For 60Hz (1/2 Cycle) => 8.33ms 
+  // Firing angle calculation : 1 full 50Hz wave =1/50=20ms
+  // Every zerocrossing : (50Hz)-> 10ms (1/2 Cycle) For 60Hz (1/2 Cycle) => 8.33ms
   // 10ms=10000us
-  int lightLevel = 100 - level; 
+  int lightLevel = 100 - level;
   if(lightLevel < 5) {  // TODO: Make this a configurable threshold ?
     digitalWrite(ctrlPin, LOW);    // triac Off
-    return;  
-  } 
+    return;
+  }
   if(lightLevel > 99) {
     lightLevel --;  // Otherwise may skip one pulse
   }
@@ -31,7 +31,7 @@ void intHandler() {
   digitalWrite(ctrlPin, LOW);    // triac Off
 }
 
- 
+
 DimmerModule::DimmerModule(DimmerConfigClass* config, int displayAddr, int displaySda, int displayScl, int intPin, int ctrlPinParam):XIOTModule(config, displayAddr, displaySda, displayScl) {
   pinMode(intPin, INPUT_PULLUP);
   _intPin = intPin;
@@ -39,6 +39,9 @@ DimmerModule::DimmerModule(DimmerConfigClass* config, int displayAddr, int displ
   ctrlPin = ctrlPinParam;
   _oledDisplay->setLineAlignment(2, TEXT_ALIGN_CENTER);
   setLevel(config->getDefaultLevel());
+  // Don't wait for registration, we want the light to be on asap with default level
+  Serial.println("Init interrupt handler");
+  attachInterrupt(digitalPinToInterrupt(_intPin), intHandler, RISING);
 }
 
 
@@ -46,15 +49,15 @@ char* DimmerModule::_customData() {
 //  Serial.println("DimmerModule::_customData");
   char* data = (char *)malloc(100);
   sprintf(data, "{\"level\":%d}", level);
-  return data;  
+  return data;
 }
 
 char* DimmerModule::useData(char* data, int* httpCode) {
 Serial.println("dimmer");
 Serial.println(data);
   const int bufferSize = 2*JSON_OBJECT_SIZE(1);
-  StaticJsonBuffer<bufferSize> jsonBuffer;   
-  JsonObject& root = jsonBuffer.parseObject(data); 
+  StaticJsonBuffer<bufferSize> jsonBuffer;
+  JsonObject& root = jsonBuffer.parseObject(data);
   if (!root.success()) {
     _oledDisplay->setLine(1, "Got bad data", TRANSIENT, NOT_BLINKING);
   } else {
@@ -75,9 +78,4 @@ void DimmerModule::refreshDisplay() {
   char message[100];
   sprintf(message, "Level  %d", level);
   _oledDisplay->setLine(2, message, NOT_TRANSIENT, NOT_BLINKING);
-}
-
-void DimmerModule::customRegistered() {
-  Serial.println("Init interrupt handler");  
-  attachInterrupt(digitalPinToInterrupt(_intPin), intHandler, RISING);
 }
