@@ -1,13 +1,11 @@
 include <../../iotinator/hardware/oledPanel.scad>;
 
-
-//cover();
-//case();
+// cover();
+case();
 // wireBlockerBottom();
 // wireBlockerTop();
 
-
-test();
+// test();
 
 wall = 1.5;
 
@@ -23,27 +21,46 @@ xOffset = 6;
 
 cornerSide = 8;
 tolerance = 0.1;
+oledPanelSide = 40;
 
 module test() {
-  translate([wall + tolerance/2, wall + tolerance/2, z-wall])
-    cover();
+  translate([wall + tolerance/2, yi + wall + tolerance/2, z])
+    rotate(180, [1, 0, 0])
+      cover();
   case();
-  
 }
 
-module cover() {
-  
-  difference() {
-    cube([xi - tolerance, yi - tolerance, wall]);
-    translate([cornerSide/2, cornerSide/2, -1])
-      cylinder(d=3, h= wall+2, $fn=50);
-    translate([cornerSide/2, yi - cornerSide/2, -1])
-      cylinder(d=3, h= wall+2, $fn=50);
-    translate([xi - cornerSide/2, cornerSide/2, -1])
-      cylinder(d=3, h= wall+2, $fn=50);
-    translate([xi - cornerSide/2, yi - cornerSide/2, -1])
-      cylinder(d=3, h= wall+2, $fn=50);
-    
+module cover()
+{
+  oledPosition = [1, (yi - tolerance - oledPanelSide) / 2, 0];
+  difference()
+  {
+    union()
+    {
+      translate(oledPosition)
+      rWindowPanel(oledPanelSide, oledPanelSide, wall, 0, 90);
+      difference()
+      {
+        cube([xi - tolerance, yi - tolerance, wall]);
+        translate([cornerSide / 2, cornerSide / 2, -1])
+        cylinder(d = 3, h = wall + 2, $fn = 50);
+        translate([cornerSide / 2, yi - cornerSide / 2, -1])
+        cylinder(d = 3, h = wall + 2, $fn = 50);
+        translate([xi - cornerSide / 2, cornerSide / 2, -1])
+        cylinder(d = 3, h = wall + 2, $fn = 50);
+        translate([xi - cornerSide / 2, yi - cornerSide / 2, -1])
+        cylinder(d = 3, h = wall + 2, $fn = 50);
+        // hole for the oled panel
+        translate(oledPosition)
+        {
+          translate([0.5, 0.5, -0.5])
+          cube([oledPanelSide - 1, oledPanelSide - 1, wall + 1]);
+        }
+      }
+    }
+    // Hole for the reset button
+    translate([20, 12, -1])
+    cylinder(d = 8, h = wall + 2, $fn = 50);
   }
 }
 
