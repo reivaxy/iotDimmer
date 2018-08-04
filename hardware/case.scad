@@ -1,9 +1,13 @@
 include <../../iotinator/hardware/oledPanel.scad>;
 
 
+//cover();
 //case();
-//wireBlockerBottom();
-wireBlockerTop();
+// wireBlockerBottom();
+// wireBlockerTop();
+
+
+test();
 
 wall = 1.5;
 
@@ -17,9 +21,35 @@ z = zi + 2*wall;
 bottomSpacerZ = 6;
 xOffset = 6;
 
+cornerSide = 8;
+tolerance = 0.1;
+
+module test() {
+  translate([wall + tolerance/2, wall + tolerance/2, z-wall])
+    cover();
+  case();
+  
+}
+
+module cover() {
+  
+  difference() {
+    cube([xi - tolerance, yi - tolerance, wall]);
+    translate([cornerSide/2, cornerSide/2, -1])
+      cylinder(d=3, h= wall+2, $fn=50);
+    translate([cornerSide/2, yi - cornerSide/2, -1])
+      cylinder(d=3, h= wall+2, $fn=50);
+    translate([xi - cornerSide/2, cornerSide/2, -1])
+      cylinder(d=3, h= wall+2, $fn=50);
+    translate([xi - cornerSide/2, yi - cornerSide/2, -1])
+      cylinder(d=3, h= wall+2, $fn=50);
+    
+  }
+}
+
 module case() {
   difference() {
-    cube([x, y, z]);
+    cube([x, y, z]);  // outer shell
     translate([wall, wall, wall]) {
       cube([xi, yi, z]);
     }
@@ -59,30 +89,30 @@ module case() {
 
   // screws for esp board
   translate([wall + xOffset + 31, wall + 4 + 12.6, wall]) {
-    bottomSpacer(2);
+    bottomSpacer(3);
   }
   translate([wall + xOffset + 31 + 48.5, wall + 4 + 11, wall]) {
-    bottomSpacer(2);
+    bottomSpacer(3);
   }
 
   // corners to support the cover
   translate([wall, wall, wall])
-    corner(8, zi, 20);
+    corner(cornerSide, zi, 20);
   translate([xi + wall, wall, wall])
     rotate(90, [0, 0, 1])
-      corner(8, zi, 20);
+      corner(cornerSide, zi, 20);
   translate([xi + wall, yi + wall, wall])
     rotate(180, [0, 0, 1])
-      corner(8, zi, 20);
+      corner(cornerSide, zi, 20);
   translate([wall, yi + wall, wall])
     rotate(-90, [0, 0, 1])
-      corner(8, zi, 20);
+      corner(cornerSide, zi, 20);
 }
 
 module bottomSpacer(screwDiam) {
   translate([0, 0, 0]) {
     difference() {
-      cylinder(d = screwDiam+1.5, h = bottomSpacerZ, $fn=50);
+      cylinder(d1 = screwDiam + 6, d2 = screwDiam + 3, h = bottomSpacerZ, $fn=50);
       translate([0, 0, 1]) {
         cylinder(d = screwDiam, h = bottomSpacerZ, $fn=50);
       }
@@ -137,7 +167,7 @@ module wireBlockerTop() {
 }
 
 
-module corner(side, height, zOffset, holeDiam = 2) {
+module corner(side, height, zOffset, holeDiam = 3) {
   angle = 20;
   difference() {
     color("aqua") {
