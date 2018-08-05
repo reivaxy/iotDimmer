@@ -4,8 +4,8 @@ include <../../iotinator/hardware/oledPanel.scad>;
 case();
 // wireBlockerBottom();
 // wireBlockerTop();
-
 // test();
+//reinforcement(wall, zi, 30);
 
 wall = 1.5;
 
@@ -84,7 +84,16 @@ module case() {
       }
     }
   }
+  // side reinforcement
+  translate([x/2 + wall, wall, wall])
+    rotate(90,[0, 0, 1])
+      reinforcement(wall, zi, 20);
 
+  // side reinforcement
+  translate([x/2 - wall, y - wall, wall])
+    rotate(-90,[0, 0, 1])
+      reinforcement(wall, zi, 20);
+  
   translate([x - 11 - wall, y - 30 - wall - 8, wall]) {
     wireBlockerBottom();
   }
@@ -183,6 +192,17 @@ module wireBlockerTop() {
   wireBlockerBottom(z = 3.5, screwThrew = true);
 }
 
+module reinforcement(side, height, zOffset) {
+  angle = 20;
+  translate([0, side, 0])
+    difference() {
+      translate([0, 0, zOffset])
+        linear_extrude(height = height - zOffset, center = false, convexity = 10, scale=side*200)
+          square(size = .01, center = true);
+      translate([-side, -side, 0])
+        cube([side, side*2, height +1]);
+    }
+} 
 
 module corner(side, height, zOffset, holeDiam = 3) {
   angle = 20;
