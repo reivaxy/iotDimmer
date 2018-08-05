@@ -19,8 +19,15 @@ This way, the load is powered only between the pulse on the triac command and th
 
 <img src="https://raw.githubusercontent.com/reivaxy/iotDimmer/master/resources/28.png" width="500"/>
 
+<img src="https://raw.githubusercontent.com/reivaxy/iotDimmer/master/resources/22osc.png" width="500"/>
+
 
 <img src="https://raw.githubusercontent.com/reivaxy/iotDimmer/master/resources/75.png" width="500"/>
+
+<img src="https://raw.githubusercontent.com/reivaxy/iotDimmer/master/resources/79osc.png" width="500"/>
+
+
+
 
 
 Here is the prototype for tests:
@@ -28,6 +35,10 @@ Here is the prototype for tests:
 <img src="https://raw.githubusercontent.com/reivaxy/iotDimmer/master/resources/prototype.jpg" width="500"/>
 
 
+Here is the finished dimmer in its 3D printed case:
+
+<img src="https://raw.githubusercontent.com/reivaxy/iotDimmer/master/resources/dimmer.jpg" width="500"/>
+
 And a screenshot of the webApp showing also two other modules:
 
-<img src="https://raw.githubusercontent.com/reivaxy/iotDimmer/master/resources/webApp.png" width="500"/>
+<img src="https://raw.githubusercontent.com/reivaxy/iotDimmer/master/resources/webApp.png" width="300"/>
