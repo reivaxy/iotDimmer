@@ -8,6 +8,7 @@
 
 // Need to be global since I couldn't make the interrupt handler be a member method
 int level = 0;
+int lightLevelDelay = 0;
 int ctrlPin;
 
 // Handler for the interruption received when crossing 0
@@ -16,16 +17,11 @@ void intHandler() {
   // Firing angle calculation : 1 full 50Hz wave =1/50=20ms
   // Every zerocrossing : (50Hz)-> 10ms (1/2 Cycle) For 60Hz (1/2 Cycle) => 8.33ms
   // 10ms=10000us
-  int lightLevel = 100 - level;
-  if(lightLevel < 5) {  // TODO: Make this a configurable threshold ?
+  if(lightLevelDelay > 9600) {
     digitalWrite(ctrlPin, LOW);    // triac Off
     return;
   }
-  if(lightLevel > 99) {
-    lightLevel --;  // Otherwise may skip one pulse
-  }
-  int dimtime = (100*lightLevel);    // For 60Hz =>65
-  delayMicroseconds(dimtime);    // Off cycle
+  delayMicroseconds(lightLevelDelay);    // Off cycle
   digitalWrite(ctrlPin, HIGH);   // triac firing
   delayMicroseconds(10);         // triac On propogation delay (for 60Hz use 8.33)
   digitalWrite(ctrlPin, LOW);    // triac Off
@@ -71,6 +67,9 @@ Serial.println(data);
 
 void DimmerModule::setLevel(int levelParam) {
   level = levelParam;
+  lightLevelDelay = (100 - level) * 100;   // Delay in ms before triggering triac
+  Serial.printf("LevelDelay %d\n", lightLevelDelay);
+
   refreshDisplay();
 }
 
