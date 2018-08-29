@@ -7,6 +7,7 @@
 #include "DimmerModule.h"
 
 // Need to be global since I couldn't make the interrupt handler be a member method
+// TODO: check std::bind !!
 int level = 0;
 int lightLevelDelay = 0;
 int ctrlPin;
