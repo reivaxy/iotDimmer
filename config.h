@@ -9,7 +9,7 @@
 #include <XIOTConfig.h>
 #include <XUtils.h>
 
-#define CONFIG_VERSION 2
+#define CONFIG_VERSION 3
 #define MODULE_NAME "Dimmer"
 
 #define DEFAULT_DEFAULT_LEVEL 50

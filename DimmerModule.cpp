@@ -41,6 +41,13 @@ DimmerModule::DimmerModule(DimmerConfigClass* config, int displayAddr, int displ
 }
 
 
+bool DimmerModule::customBeforeOTA() {
+  Serial.println("Detaching interrupts for OTA");
+  detachInterrupt(digitalPinToInterrupt(_intPin));
+  return true;
+}
+
+
 char* DimmerModule::_customData() {
 //  Serial.println("DimmerModule::_customData");
   char* data = (char *)malloc(100);

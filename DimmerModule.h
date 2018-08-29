@@ -13,6 +13,8 @@ void intHandler();
 class DimmerModule:public XIOTModule {
 public:
   DimmerModule(DimmerConfigClass* config, int displayAddr, int displaySda, int displayScl, int intPin, int ctrlPin);
+  bool customBeforeOTA();
+
 
 protected:    
   char* _customData() override;
