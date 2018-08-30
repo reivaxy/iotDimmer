@@ -12,7 +12,7 @@
 #define CONFIG_VERSION 3
 #define MODULE_NAME "Dimmer"
 
-#define DEFAULT_DEFAULT_LEVEL 50
+#define DEFAULT_DEFAULT_LEVEL 34
 
 struct DimmerConfigStruct:ModuleConfigStruct {
   int defaultLevel = DEFAULT_DEFAULT_LEVEL;
