@@ -15,7 +15,6 @@ public:
   bool customBeforeOTA();
 
 protected:    
-  void customOnStaGotIpHandler(WiFiEventStationModeGotIP ipInfo) override;
   void intHandler();
   char* _customData() override;
   char* useData(char *, int *) override;

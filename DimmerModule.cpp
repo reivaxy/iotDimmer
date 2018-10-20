@@ -7,21 +7,18 @@
 #include "DimmerModule.h"
 #include <FunctionalInterrupt.h>
 
-
 DimmerModule::DimmerModule(DimmerConfigClass* config, int displayAddr, int displaySda, int displayScl, int intPin, int ctrlPinParam):XIOTModule(config, displayAddr, displaySda, displayScl) {
-  pinMode(intPin, INPUT_PULLUP);
   _intPin = intPin;
-  pinMode(ctrlPinParam, OUTPUT);
   _ctrlPin = ctrlPinParam;
+  pinMode(ctrlPinParam, OUTPUT);
+  pinMode(_intPin, INPUT_PULLUP);
   _oledDisplay->setLineAlignment(2, TEXT_ALIGN_CENTER);
   setLevel(config->getDefaultLevel());
+  attachInterrupt(digitalPinToInterrupt(_intPin), std::bind(&DimmerModule::intHandler, this), RISING); 
   
-}
-
-void DimmerModule::customOnStaGotIpHandler(WiFiEventStationModeGotIP ipInfo) {
-  Serial.println("Init interrupt handler");
-  attachInterrupt(digitalPinToInterrupt(_intPin), std::bind(&DimmerModule::intHandler, this), RISING);
-
+    Serial.print(F("F_CPU = "));
+    Serial.print(F_CPU,DEC);
+    Serial.println(F(" Hz"));
 }
 
 // Handler for the interruption received when crossing 0

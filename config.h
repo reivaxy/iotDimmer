@@ -9,10 +9,10 @@
 #include <XIOTConfig.h>
 #include <XUtils.h>
 
-#define CONFIG_VERSION 3
+#define CONFIG_VERSION 4
 #define MODULE_NAME "Dimmer"
 
-#define DEFAULT_DEFAULT_LEVEL 34
+#define DEFAULT_DEFAULT_LEVEL 42
 
 struct DimmerConfigStruct:ModuleConfigStruct {
   int defaultLevel = DEFAULT_DEFAULT_LEVEL;
