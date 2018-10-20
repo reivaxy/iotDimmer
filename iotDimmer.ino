@@ -5,10 +5,6 @@
  */
  
 
-#if F_CPU != 160000000
-  CPU FREQUENCY MUST BE SET TO 160MHz !!
-#endif
-
 #include <stdio.h>
 #include "DimmerModule.h"
 
