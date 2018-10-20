@@ -18,7 +18,7 @@ DimmerModule::DimmerModule(DimmerConfigClass* config, int displayAddr, int displ
   
 }
 
-void DimmerModule::customOnStaGotIpHandled(WiFiEventStationModeGotIP ipInfo) {
+void DimmerModule::customOnStaGotIpHandler(WiFiEventStationModeGotIP ipInfo) {
   Serial.println("Init interrupt handler");
   attachInterrupt(digitalPinToInterrupt(_intPin), std::bind(&DimmerModule::intHandler, this), RISING);
 
