@@ -80,4 +80,6 @@ void DimmerModule::refreshDisplay() {
   char message[100];
   sprintf(message, "Level  %d", _level);
   _oledDisplay->setLine(2, message, NOT_TRANSIENT, NOT_BLINKING);
+  sprintf(message, "FCPU  %d", F_CPU);
+  _oledDisplay->setLine(3, message, NOT_TRANSIENT, NOT_BLINKING);
 }
